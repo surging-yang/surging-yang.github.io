@@ -72,7 +72,7 @@
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2019/09/24/spring-cloud分布式日志采集/" rel="bookmark">
+      <a href="/2019/09/24/Spring-cloud分布式日志采集1-Zipkin服务端和客户端配置/" rel="bookmark">
         <time class="entry-date published" datetime="2019-09-24T08:07:27.000Z">
           2019-09-24
         </time>
@@ -105,13 +105,9 @@
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  sleuth:</span></span><br><span class="line"><span class="attr">    sampler:</span></span><br><span class="line"><span class="attr">      rate:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  zipkin:</span></span><br><span class="line"><span class="attr">    base-url:</span> <span class="attr">http://localhost:9797</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="Zipkin-WEB控制台"><a href="#Zipkin-WEB控制台" class="headerlink" title="Zipkin WEB控制台"></a>Zipkin WEB控制台</h2><ul>
-<li>zipkin-server控制台首页，查询输入http.path=/account/user/info</li>
+<li>zipkin-server控制台首页，查询输入http.path=/account/user/info<br><img src="https://surging-yang.github.io/images/zipkin-sever.jpg" alt="zipkin-sever">  </li>
+<li>zipkin单条log详情<br><img src="https://surging-yang.github.io/images/zipkin-log.jpg" alt="zipkin-log"></li>
 </ul>
-<p><img src="https://surging-yang.github.io/images/zipkin-sever.jpg" alt="zipkin-sever">  </p>
-<ul>
-<li>zipkin单条log详情  </li>
-</ul>
-<p><img src="https://surging-yang.github.io/images/zipkin-log.jpg" alt="zipkin-log"></p>
 <blockquote>
 <p>思考：<br>1、采样率设置为1，生产环境该如何配置？<br>2、zipkin虽为异步写入，但是默认使用的是http协议写入数据，效率势必会有影响，有哪些方法可以提高效率？<br>3、zipkin-server如何实现高可用，服务重启或者停止未写入的数据如何处理</p>
 </blockquote>
