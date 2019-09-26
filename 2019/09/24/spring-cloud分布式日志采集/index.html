@@ -87,9 +87,7 @@
     <div class="entry">
       
         <p>由于微服务架构中每个服务都可能分散在不通的服务器，因此需要一套分布式的日志解决方案，Spring-cloud提供了一个用来trace服务的组件sleuth，它可以通过<br>日志获得服务的依赖关系。基于sleuth，可以通过现有的日志工具实现分布式日志的采集。我们将要使用的是ELK，也就是elasticsearch、logstash、kibana。首先我们来<br>了解一下zipkin的配置</p>
-<h1 id="Zipkin服务端和客户端的配置"><a href="#Zipkin服务端和客户端的配置" class="headerlink" title="Zipkin服务端和客户端的配置"></a>Zipkin服务端和客户端的配置</h1><h2 id="Zipkin服务端"><a href="#Zipkin服务端" class="headerlink" title="Zipkin服务端"></a>Zipkin服务端</h2><p>Zipkin是一种分布式跟踪系统。它有助于收集解决微服务架构中延迟问题所需的时序数据。它管理这些数据的收集和查找。Zipkin的设计基于<br>Google Dapper论文。</p>
-<p>应用程序用于向Zipkin报告时间数据。Zipkin用户界面还提供了一个依赖关系图，显示每个应用程序有多少跟踪请求。如果您正在解决延迟问题或错误问题，则可以根据应用程序，跟踪长度，注释或时间戳过滤或排序所有跟踪。选择跟踪后，您可以看到每个跨度所需的总跟踪时间百分比，从而可以识别问题应用程序。</p>
-<p>SpringBoot2.0官方已经默认不在支持自建zipkin-server的方式进行服务链路追踪，目前的参考资料和相关建议比较少，经过个人实现，发现zipkin中不少<br>版本的jar包和springboot的版本有冲突出现了不兼容启动不了的情况，但是还是搭建了一个基于springboot启动的zipkin-server,我使用框架版本如下:</p>
+<h1 id="Zipkin服务端和客户端的配置"><a href="#Zipkin服务端和客户端的配置" class="headerlink" title="Zipkin服务端和客户端的配置"></a>Zipkin服务端和客户端的配置</h1><h2 id="Zipkin服务端"><a href="#Zipkin服务端" class="headerlink" title="Zipkin服务端"></a>Zipkin服务端</h2><p>Zipkin是一种分布式跟踪系统。它有助于收集解决微服务架构中延迟问题所需的时序数据。它管理这些数据的收集和查找。Zipkin的设计基于<br>Google Dapper论文。<br>应用程序用于向Zipkin报告时间数据。Zipkin用户界面还提供了一个依赖关系图，显示每个应用程序有多少跟踪请求。如果您正在解决延迟问题或错误问题，则可以根据应用程序，跟踪长度，注释或时间戳过滤或排序所有跟踪。选择跟踪后，您可以看到每个跨度所需的总跟踪时间百分比，从而可以识别问题应用程序。<br>SpringBoot2.0官方已经默认不在支持自建zipkin-server的方式进行服务链路追踪，目前的参考资料和相关建议比较少，经过个人实现，发现zipkin中不少<br>版本的jar包和springboot的版本有冲突出现了不兼容启动不了的情况，但是还是搭建了一个基于springboot启动的zipkin-server,我使用框架版本如下:</p>
 <ul>
 <li>Springboot 2.1.4.RELEASE</li>
 <li>SpringCloud Greenwich.SR1</li>
@@ -107,11 +105,15 @@
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  sleuth:</span></span><br><span class="line"><span class="attr">    sampler:</span></span><br><span class="line"><span class="attr">      rate:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  zipkin:</span></span><br><span class="line"><span class="attr">    base-url:</span> <span class="attr">http://localhost:9797</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="Zipkin-WEB控制台"><a href="#Zipkin-WEB控制台" class="headerlink" title="Zipkin WEB控制台"></a>Zipkin WEB控制台</h2><ul>
-<li>zipkin-server控制台首页，查询输入http.path=/account/user/info<br><img src="https://surging-yang.github.io/images/zipkin-sever.jpg" alt="zipkin-sever"></li>
-<li>zipkin单条log详情<br><img src="https://surging-yang.github.io/images/zipkin-log.jpg" alt="zipkin-log"></li>
+<li>zipkin-server控制台首页，查询输入http.path=/account/user/info</li>
 </ul>
-<h2 id="一点思考"><a href="#一点思考" class="headerlink" title="一点思考"></a>一点思考</h2><blockquote>
-<p>此配置仅限用户量小或者</p>
+<p><img src="https://surging-yang.github.io/images/zipkin-sever.jpg" alt="zipkin-sever">  </p>
+<ul>
+<li>zipkin单条log详情  </li>
+</ul>
+<p><img src="https://surging-yang.github.io/images/zipkin-log.jpg" alt="zipkin-log"></p>
+<blockquote>
+<p>思考：<br>1、采样率设置为1，生产环境该如何配置？<br>2、zipkin虽为异步写入，但是默认使用的是http协议写入数据，效率势必会有影响，有哪些方法可以提高效率？<br>3、zipkin-server如何实现高可用，服务重启或者停止未写入的数据如何处理</p>
 </blockquote>
 
       
