@@ -99,13 +99,13 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[2019-09-27T14:01:55,934][INFO ][o.e.x.s.a.s.FileRolesStore] [elasticsearch-node-1] parsed [0] roles from file [/home/shumei/project/elk/elasticsearch-6.8.3/config/roles.yml]</span><br><span class="line">[2019-09-27T14:01:56,586][INFO ][o.e.x.m.p.l.CppLogMessageHandler] [elasticsearch-node-1] [controller/24070] [Main.cc@109] controller (64 bit): Version 6.8.3 (Build 7ace96ffff9215) Copyright (c) 2019 Elasticsearch BV</span><br><span class="line">[2019-09-27T14:01:57,015][DEBUG][o.e.a.ActionModule       ] [elasticsearch-node-1] Using REST wrapper from plugin org.elasticsearch.xpack.security.Security</span><br><span class="line">[2019-09-27T14:01:57,210][INFO ][o.e.d.DiscoveryModule    ] [elasticsearch-node-1] using discovery type [zen] and host providers [settings]</span><br><span class="line">[2019-09-27T14:01:58,134][INFO ][o.e.n.Node               ] [elasticsearch-node-1] initialized</span><br><span class="line">[2019-09-27T14:01:58,134][INFO ][o.e.n.Node               ] [elasticsearch-node-1] starting ...</span><br><span class="line">[2019-09-27T14:01:58,288][INFO ][o.e.t.TransportService   ] [elasticsearch-node-1] publish_address &#123;10.10.1.7:9300&#125;, bound_addresses &#123;[::]:9300&#125;</span><br><span class="line">[2019-09-27T14:01:58,304][INFO ][o.e.b.BootstrapChecks    ] [elasticsearch-node-1] bound or publishing to a non-loopback address, enforcing bootstrap checks</span><br><span class="line">[2019-09-27T14:01:58,308][ERROR][o.e.b.Bootstrap          ] [elasticsearch-node-1] node validation exception</span><br><span class="line">[2] bootstrap checks failed</span><br><span class="line">[1]: memory locking requested for elasticsearch process but memory is not locked</span><br><span class="line">[2]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]</span><br><span class="line">[2019-09-27T14:01:58,314][INFO ][o.e.n.Node               ] [elasticsearch-node-1] stopping ...</span><br><span class="line">[2019-09-27T14:01:58,352][INFO ][o.e.n.Node               ] [elasticsearch-node-1] stopped</span><br><span class="line">[2019-09-27T14:01:58,352][INFO ][o.e.n.Node               ] [elasticsearch-node-1] closing ...</span><br><span class="line">[2019-09-27T14:01:58,362][INFO ][o.e.n.Node               ] [elasticsearch-node-1] closed</span><br><span class="line">[2019-09-27T14:01:58,363][INFO ][o.e.x.m.p.NativeController] [elasticsearch-node-1] Native controller process has stopped - no new native processes can be started</span><br><span class="line">[2019-09-27T14:06:03,655][ERROR][o.e.b.Bootstrap          ] [elasticsearch-node-1] Exception</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>错误1： memory locking requested for elasticsearch process but memory is not locked<blockquote>
+<li>错误1： memory locking requested for elasticsearch process but memory is not locked</li>
+</ul>
+<blockquote>
 <p>原因：6.8.3版本bootstrap.memory_lock此项默认为true，此项配置意义是锁定内存地址，防止es内存被交换出去，也就是避免使用swap交换分区，频繁的交换会导致IOPS变高<br>解决方法1：bootstrap.memory_lock设置为false，此项clear<br>解决方法2：锁定内存地址需要权限和服务期支持，以linux为例，首先切换到root用户，做出以下修改:<br>1、修改/etc/security/limits.conf，文件最后添加以下内容：</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">* soft nofile 65536</span><br><span class="line">* hard nofile 65536</span><br><span class="line">* soft nproc 32000</span><br><span class="line">* hard nproc 32000</span><br><span class="line">* hard memlock unlimited</span><br><span class="line">* soft memlock unlimited</span><br></pre></td></tr></table></figure>
 
-</li>
-</ul>
 <blockquote>
 <p>2、修改/etc/systemd/system.conf，分别修改以下内容：</p>
 </blockquote>
@@ -117,19 +117,21 @@
 <figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>错误2：max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]<blockquote>
+<li>错误2：max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]</li>
+</ul>
+<blockquote>
 <p>原因：elasticsearch用户拥有的虚拟内存权限太小，至少需要262144<br>解决方法：</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">切换到root用户</span><br><span class="line">执行命令：</span><br><span class="line">sysctl -w vm.max_map_count=262144</span><br><span class="line">查看结果：</span><br><span class="line">sysctl -a|grep vm.max_map_count</span><br><span class="line">显示：</span><br><span class="line">vm.max_map_count = 262144</span><br><span class="line">上述方法修改之后，如果重启虚拟机将失效，所以：</span><br><span class="line">解决办法：</span><br><span class="line">在   /etc/sysctl.conf文件最后添加一行</span><br><span class="line">vm.max_map_count=262144</span><br><span class="line">即可永久修改</span><br></pre></td></tr></table></figure>
 
-</li>
-</ul>
 <h1 id="安装elasticsearch-head插件"><a href="#安装elasticsearch-head插件" class="headerlink" title="安装elasticsearch-head插件"></a>安装elasticsearch-head插件</h1><p>项目地址：<a href="https://github.com/mobz/elasticsearch-head/" target="_blank" rel="noopener">https://github.com/mobz/elasticsearch-head/</a><br>node环境和配置不一一赘述<br>操作安装官方文档来即可</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">安装命令</span><br><span class="line">npm install</span><br><span class="line">启动命令</span><br><span class="line">npm run start</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><p>elasticsearch-head界面<br><img src="https://surging-yang.github.io/images/elk/elasticsearch-head.jpg" alt="elasticsearch-head">  </p>
-<h1 id="Kibana安装和启动"><a href="#Kibana安装和启动" class="headerlink" title="Kibana安装和启动"></a>Kibana安装和启动</h1></li>
+<li>elasticsearch-head界面</li>
+</ul>
+<p><img src="https://surging-yang.github.io/images/elk/elasticsearch-head.jpg" alt="elasticsearch-head">  </p>
+<h1 id="Kibana安装和启动"><a href="#Kibana安装和启动" class="headerlink" title="Kibana安装和启动"></a>Kibana安装和启动</h1><ul>
 <li><p>直接解压安装包 tar -zxvf kibana-6.8.3-linux-x86_64.tar.gz</p>
 </li>
 <li><p>修改配置文件kibana-6.8.3-linux-x86_64/config/kibana.yml</p>
@@ -203,7 +205,7 @@
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  sleuth:</span></span><br><span class="line"><span class="attr">    sampler:</span></span><br><span class="line"><span class="attr">      rate:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  zipkin:</span></span><br><span class="line"><span class="attr">    base-url:</span> <span class="attr">http://localhost:9797</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="Zipkin-WEB控制台"><a href="#Zipkin-WEB控制台" class="headerlink" title="Zipkin WEB控制台"></a>Zipkin WEB控制台</h2><ul>
-<li>zipkin-server控制台首页，查询输入http.path=/account/user/info<br><img src="https://surging-yang.github.io/images/zipkin/zipkin-sever.jpg" alt="zipkin-sever">  </li>
+<li>zipkin-server控制台首页，查询输入http.path=/account/user/info<br><img src="https://surging-yang.github.io/images/zipkin/zipkin-server.jpg" alt="zipkin-sever">  </li>
 <li>zipkin单条log详情<br><img src="https://surging-yang.github.io/images/zipkin/zipkin-log.jpg" alt="zipkin-log"></li>
 </ul>
 <blockquote>
