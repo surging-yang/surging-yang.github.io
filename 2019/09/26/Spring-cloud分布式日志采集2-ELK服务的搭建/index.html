@@ -3,21 +3,26 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>Surging&#39;s Blog</title>
+  <title>Spring-cloud分布式日志采集2-ELK服务的搭建 | Surging&#39;s Blog</title>
 
   
   <meta name="author" content="surging_yang">
   
 
   
+  <meta name="description" content="Elasticsearch是实时全文搜索和分析引擎，提供搜集、分析、存储数据三大功能；是一套开放REST和JAVA API等结构提供高效搜索功能，可扩展的分布式系统。它构建于Apache Lucene搜索引擎库之上。Logstash是一个用来搜集、分析、过滤日志的工具。它支持几乎任何类型的日志，包括">
+  
 
+  
+  
+  <meta name="keywords" content>
   
 
   <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  
+  <meta property="og:title" content="Spring-cloud分布式日志采集2-ELK服务的搭建">
 
   <meta property="og:site_name" content="Surging&#39;s Blog">
 
@@ -58,11 +63,10 @@
 </header>
 
     <main class="site-main posts-loop">
-    
-  <article>
+    <article>
   
     
-    <h3 class="article-title"><a href="/2019/09/26/Spring-cloud分布式日志采集2-ELK服务的搭建/"><span>Spring-cloud分布式日志采集2-ELK服务的搭建</span></a></h3>
+    <h3 class="article-title"><span>Spring-cloud分布式日志采集2-ELK服务的搭建</span></h3>
     
   
 
@@ -160,95 +164,6 @@
 </article>
 
 
-
-  <article>
-  
-    
-    <h3 class="article-title"><a href="/2019/09/24/Spring-cloud分布式日志采集1-Zipkin服务端和客户端配置/"><span>Spring-cloud分布式日志采集1-Zipkin服务端和客户端配置</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/09/24/Spring-cloud分布式日志采集1-Zipkin服务端和客户端配置/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-09-24T08:07:27.000Z">
-          2019-09-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>由于微服务架构中每个服务都可能分散在不通的服务器，因此需要一套分布式的日志解决方案，Spring-cloud提供了一个用来trace服务的组件sleuth，它可以通过<br>日志获得服务的依赖关系。基于sleuth，可以通过现有的日志工具实现分布式日志的采集。我们将要使用的是ELK，也就是elasticsearch、logstash、kibana。首先我们来了解一下zipkin的配置</p>
-<h1 id="Zipkin服务端和客户端的配置"><a href="#Zipkin服务端和客户端的配置" class="headerlink" title="Zipkin服务端和客户端的配置"></a>Zipkin服务端和客户端的配置</h1><h2 id="Zipkin服务端"><a href="#Zipkin服务端" class="headerlink" title="Zipkin服务端"></a>Zipkin服务端</h2><p>Zipkin是一种分布式跟踪系统。它有助于收集解决微服务架构中延迟问题所需的时序数据。它管理这些数据的收集和查找。Zipkin的设计基于<br>Google Dapper论文。<br>应用程序用于向Zipkin报告时间数据。Zipkin用户界面还提供了一个依赖关系图，显示每个应用程序有多少跟踪请求。如果您正在解决延迟问题或错误问题，则可以根据应用程序，跟踪长度，注释或时间戳过滤或排序所有跟踪。选择跟踪后，您可以看到每个跨度所需的总跟踪时间百分比，从而可以识别问题应用程序。<br>SpringBoot2.0官方已经默认不在支持自建zipkin-server的方式进行服务链路追踪，目前的参考资料和相关建议比较少，经过个人实现，发现zipkin中不少<br>版本的jar包和springboot的版本有冲突出现了不兼容启动不了的情况，但是还是搭建了一个基于springboot启动的zipkin-server,我使用框架版本如下:</p>
-<ul>
-<li>Springboot 2.1.4.RELEASE</li>
-<li>SpringCloud Greenwich.SR1</li>
-</ul>
-<h3 id="新建common-zipkin服务端"><a href="#新建common-zipkin服务端" class="headerlink" title="新建common-zipkin服务端"></a>新建common-zipkin服务端</h3><p>配置POM文件，引入版本2.12.3，目前最新版本2.12.9，但是最新版本启动不了</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.zipkin.java<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zipkin-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.12.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.zipkin.java<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zipkin-autoconfigure-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.12.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>application.yml配置</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">9797</span></span><br><span class="line"><span class="attr">  servlet:</span></span><br><span class="line"><span class="attr">    context-path:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  application:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">common-zipkin</span></span><br><span class="line"><span class="attr">  main:</span></span><br><span class="line"><span class="attr">    allow-bean-definition-overriding:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">  instance:</span></span><br><span class="line"><span class="attr">    prefer-ip-address:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    instance-id:</span> <span class="string">$&#123;spring.cloud.client.ip-address&#125;:$&#123;server.port&#125;</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line"><span class="attr">    service-url:</span></span><br><span class="line"><span class="attr">      defaultZone:</span> <span class="attr">http://10.10.1.7:43274/common-eureka/eureka/</span></span><br><span class="line"><span class="attr">management:</span></span><br><span class="line"><span class="attr">  metrics:</span></span><br><span class="line"><span class="attr">    web:</span></span><br><span class="line"><span class="attr">      server:</span></span><br><span class="line"><span class="attr">        auto-time-requests:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="新建zipkin客户端"><a href="#新建zipkin客户端" class="headerlink" title="新建zipkin客户端"></a>新建zipkin客户端</h3><p>POM文件引入</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-sleuth<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-sleuth-zipkin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>yml配置</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  sleuth:</span></span><br><span class="line"><span class="attr">    sampler:</span></span><br><span class="line"><span class="attr">      rate:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  zipkin:</span></span><br><span class="line"><span class="attr">    base-url:</span> <span class="attr">http://localhost:9797</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Zipkin-WEB控制台"><a href="#Zipkin-WEB控制台" class="headerlink" title="Zipkin WEB控制台"></a>Zipkin WEB控制台</h2><ul>
-<li>zipkin-server控制台首页，查询输入http.path=/account/user/info<br><img src="https://surging-yang.github.io/images/zipkin/zipkin-sever.jpg" alt="zipkin-sever">  </li>
-<li>zipkin单条log详情<br><img src="https://surging-yang.github.io/images/zipkin/zipkin-log.jpg" alt="zipkin-log"></li>
-</ul>
-<blockquote>
-<p>思考：<br>1、采样率设置为1，生产环境该如何配置？<br>2、zipkin虽为异步写入，但是默认使用的是http协议写入数据，效率势必会有影响，有哪些方法可以提高效率？<br>3、zipkin-server如何实现高可用，服务重启或者停止未写入的数据如何处理</p>
-</blockquote>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Spring-cloud分布式日志采集/">Spring-cloud分布式日志采集</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/zipkin/">zipkin</a><a href="/tags/sleuth/">sleuth</a><a href="/tags/elasticsearch/">elasticsearch</a><a href="/tags/logstash/">logstash</a><a href="/tags/kibana/">kibana</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-
-<nav class="pagination">
-  
-  
-</nav>
     </main>
 
     <footer class="site-footer">
