@@ -4,7 +4,7 @@
 
 
 
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -25,7 +25,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Pisces',
     version: '7.4.0',
     exturl: false,
     sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
@@ -47,22 +47,22 @@
     path: '',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
-      copy_button: 'Kopieren',
-      copy_success: 'Kopiert',
-      copy_failure: 'Kopieren fehlgeschlagen'
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
     },
     sidebarPadding: 40
   };
 </script>
 
   <meta name="description" content="由于微服务架构中每个服务都可能分散在不通的服务器，因此需要一套分布式的日志解决方案，Spring-cloud提供了一个用来trace服务的组件sleuth，它可以通过日志获得服务的依赖关系。基于sleuth，可以通过现有的日志工具实现分布式日志的采集。我们将要使用的是ELK，也就是elasticsearch、logstash、kibana。首先我们来了解一下zipkin的配置 Zipkin服务端和">
-<meta name="keywords" content="zipkin,sleuth,elasticsearch,logstash,kibana">
+<meta name="keywords" content="elasticsearch,logstash,kibana,zipkin,sleuth">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring-cloud分布式日志采集1-Zipkin服务端和客户端配置">
 <meta property="og:url" content="https://surging-yang.github.io/2019/09/24/Spring-cloud分布式日志采集1-Zipkin服务端和客户端配置/index.html">
 <meta property="og:site_name" content="Surging&#39;s Blog">
 <meta property="og:description" content="由于微服务架构中每个服务都可能分散在不通的服务器，因此需要一套分布式的日志解决方案，Spring-cloud提供了一个用来trace服务的组件sleuth，它可以通过日志获得服务的依赖关系。基于sleuth，可以通过现有的日志工具实现分布式日志的采集。我们将要使用的是ELK，也就是elasticsearch、logstash、kibana。首先我们来了解一下zipkin的配置 Zipkin服务端和">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://surging-yang.github.io/images/zipkin/zipkin-server.jpg">
 <meta property="og:image" content="https://surging-yang.github.io/images/zipkin/zipkin-log.jpg">
 <meta property="og:updated_time" content="2019-09-29T08:58:08.950Z">
@@ -120,7 +120,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
   <div class="container use-motion">
     <div class="headband"></div>
 
@@ -138,7 +138,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Navigationsleiste an/ausschalten">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -158,7 +158,7 @@
       
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
       
@@ -169,7 +169,7 @@
       
     
 
-    <a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>归档</a>
+    <a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
       
@@ -180,7 +180,7 @@
       
     
 
-    <a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>分类</a>
+    <a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
       
@@ -191,12 +191,10 @@
       
     
 
-    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>标签</a>
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
   </ul>
-
-    
 
 </nav>
 </div>
@@ -212,6 +210,8 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+            
+
           <div id="content" class="content">
             
 
@@ -243,13 +243,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Erstellt: 2019-09-24 16:07:27" itemprop="dateCreated datePublished" datetime="2019-09-24T16:07:27+08:00">2019-09-24</time>
+              <time title="创建时间：2019-09-24 16:07:27" itemprop="dateCreated datePublished" datetime="2019-09-24T16:07:27+08:00">2019-09-24</time>
             </span>
           
             
@@ -259,8 +259,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-09-29 16:58:08" itemprop="dateModified" datetime="2019-09-29T16:58:08+08:00">2019-09-29</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-29 16:58:08" itemprop="dateModified" datetime="2019-09-29T16:58:08+08:00">2019-09-29</time>
               </span>
             
           
@@ -268,7 +268,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring-cloud分布式日志采集/" itemprop="url" rel="index"><span itemprop="name">Spring-cloud分布式日志采集</span></a></span>
 
@@ -329,15 +329,15 @@
           
           <div class="post-tags">
             
-              <a href="/tags/zipkin/" rel="tag"># zipkin</a>
-            
-              <a href="/tags/sleuth/" rel="tag"># sleuth</a>
-            
               <a href="/tags/elasticsearch/" rel="tag"># elasticsearch</a>
             
               <a href="/tags/logstash/" rel="tag"># logstash</a>
             
               <a href="/tags/kibana/" rel="tag"># kibana</a>
+            
+              <a href="/tags/zipkin/" rel="tag"># zipkin</a>
+            
+              <a href="/tags/sleuth/" rel="tag"># sleuth</a>
             
           </div>
         
@@ -373,6 +373,41 @@
 
           </div>
           
+              <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+              <div id="container" style="display:none"></div>
+              <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+              <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+              <script>
+              const myTheme = {
+                render(state, instance) {
+                  const container = document.createElement('div');
+                  container.lang = "en-US";
+                  container.className = 'gitment-container gitment-root-container';
+                  container.appendChild(instance.renderHeader(state, instance));
+                  container.appendChild(instance.renderEditor(state, instance));
+                  container.appendChild(instance.renderComments(state, instance));
+                  container.appendChild(instance.renderFooter(state, instance));
+                  return container;
+                }
+              }
+              function showGitment() {
+                $("#gitment_title").attr("style", "display:none");
+                $("#container").attr("style", "").addClass("gitment_container");
+                var gitment = new Gitment({
+                  id: window.location.pathname,
+                  theme: myTheme,
+                  owner: '',
+                  repo: '',
+                  oauth: {
+                    client_id: 'bb2304c6da985efa2d23',
+                    client_secret: 'dbe9d290a9e21e468a13f2a526b1058e7018a0a6'
+                  }
+                });
+                gitment.render('container');
+              }
+              </script>
+          
+
 
         </div>
           
@@ -395,10 +430,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          站点概览
         </li>
       </ul>
 
@@ -421,7 +456,7 @@
           <a href="/archives">
         
           <span class="site-state-item-count">2</span>
-          <span class="site-state-item-name">Artikel</span>
+          <span class="site-state-item-name">日志</span>
         </a>
       </div>
     
@@ -429,18 +464,26 @@
       
       <div class="site-state-item site-state-categories">
         
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">Kategorien</span>
+          
+            <a href="/categories/">
+          
         
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
       </div>
     
       
       
       <div class="site-state-item site-state-tags">
         
-        <span class="site-state-item-count">6</span>
-        <span class="site-state-item-name">schlagwörter</span>
+          
+            <a href="/tags/">
+          
         
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
       </div>
     
   </nav>
@@ -466,9 +509,9 @@
   </span>
   <span class="author" itemprop="copyrightHolder">surging_yang</span>
 </div>
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
   <span class="post-meta-divider">|</span>
-  <div class="theme-info">Design – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
 
         
 
@@ -493,7 +536,7 @@
   <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 <script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
-<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
 <script src="/js/next-boot.js?v=7.4.0"></script>
 
 
