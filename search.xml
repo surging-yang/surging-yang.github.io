@@ -9,9 +9,9 @@
       </categories>
       <tags>
         <tag>elasticsearch</tag>
-        <tag>elasticsearch-head</tag>
         <tag>logstash</tag>
         <tag>kibana</tag>
+        <tag>elasticsearch-head</tag>
       </tags>
   </entry>
   <entry>
@@ -22,11 +22,11 @@
         <category>Spring-cloud分布式日志采集</category>
       </categories>
       <tags>
+        <tag>zipkin</tag>
+        <tag>sleuth</tag>
         <tag>elasticsearch</tag>
         <tag>logstash</tag>
         <tag>kibana</tag>
-        <tag>zipkin</tag>
-        <tag>sleuth</tag>
       </tags>
   </entry>
 </search>
