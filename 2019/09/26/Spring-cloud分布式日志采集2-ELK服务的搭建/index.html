@@ -56,11 +56,11 @@
 </script>
 
   <meta name="description" content="Elasticsearch是实时全文搜索和分析引擎，提供搜集、分析、存储数据三大功能；是一套开放REST和JAVA API等结构提供高效搜索功能，可扩展的分布式系统。它构建于Apache Lucene搜索引擎库之上。Logstash是一个用来搜集、分析、过滤日志的工具。它支持几乎任何类型的日志，包括系统日志、错误日志和自定义应用程序日志。它可以从许多来源接收日志，这些来源包括 syslog、消息传">
-<meta name="keywords" content="elasticsearch,logstash,kibana,elasticsearch-head">
+<meta name="keywords" content="elasticsearch,elasticsearch-head,logstash,kibana">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring-cloud分布式日志采集2-ELK服务的搭建">
 <meta property="og:url" content="https://surging-yang.github.io/2019/09/26/Spring-cloud分布式日志采集2-ELK服务的搭建/index.html">
-<meta property="og:site_name" content="Surging&#39;s Blog">
+<meta property="og:site_name" content="surging.yang">
 <meta property="og:description" content="Elasticsearch是实时全文搜索和分析引擎，提供搜集、分析、存储数据三大功能；是一套开放REST和JAVA API等结构提供高效搜索功能，可扩展的分布式系统。它构建于Apache Lucene搜索引擎库之上。Logstash是一个用来搜集、分析、过滤日志的工具。它支持几乎任何类型的日志，包括系统日志、错误日志和自定义应用程序日志。它可以从许多来源接收日志，这些来源包括 syslog、消息传">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://surging-yang.github.io/images/elk/elasticsearch-head.jpg">
@@ -87,7 +87,7 @@
   };
 </script>
 
-  <title>Spring-cloud分布式日志采集2-ELK服务的搭建 | Surging's Blog</title>
+  <title>Spring-cloud分布式日志采集2-ELK服务的搭建 | surging.yang</title>
   
 
 
@@ -134,7 +134,7 @@
     <div>
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Surging's Blog</span>
+        <span class="site-title">surging.yang</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -260,7 +260,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Surging's Blog">
+      <meta itemprop="name" content="surging.yang">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">Spring-cloud分布式日志采集2-ELK服务的搭建
@@ -327,7 +327,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Elasticsearch是实时全文搜索和分析引擎，提供搜集、分析、存储数据三大功能；是一套开放REST和JAVA API等结构提供高效搜索功能，可扩展的分布式系统。它构建于Apache Lucene搜索引擎库之上。<br>Logstash是一个用来搜集、分析、过滤日志的工具。它支持几乎任何类型的日志，包括系统日志、错误日志和自定义应用程序日志。它可以从许多来源接收日志，这些来源包括 syslog、消息传递（例如 RabbitMQ）和JMX，它能够以多种方式输出数据，包括电子邮件、websockets和Elasticsearch。<br>Kibana是一个基于Web的图形界面，用于搜索、分析和可视化存储在 Elasticsearch指标中的日志数据。它利用Elasticsearch的REST接口来检索数据，不仅允许用户创建他们自己的数据的定制仪表板视图，还允许他们以特殊的方式查询和过滤数据.</p>
+        <p>Elasticsearch是实时全文搜索和分析引擎，提供搜集、分析、存储数据三大功能；是一套开放REST和JAVA API等结构提供高效搜索功能，可扩展的分布式系统。它构建于Apache Lucene搜索引擎库之上。<br>Logstash是一个用来搜集、分析、过滤日志的工具。它支持几乎任何类型的日志，包括系统日志、错误日志和自定义应用程序日志。它可以从许多来源接收日志，这些来源包括 syslog、消息传递（例如 RabbitMQ）和JMX，它能够以多种方式输出数据，包括电子邮件、websockets和Elasticsearch。<br>Kibana是一个基于Web的图形界面，用于搜索、分析和可视化存储在 Elasticsearch指标中的日志数据。它利用Elasticsearch的REST接口来检索数据，不仅允许用户创建他们自己的数据的定制仪表板视图，还允许他们以特殊的方式查询和过滤数据.</p><a id="more"></a>
 <p>下载地址：<a href="https://www.elastic.co/cn/downloads/" target="_blank" rel="noopener">https://www.elastic.co/cn/downloads/</a><br>我们需要下载Elasticsearch、Kibana、Logstash，实验阶段只会演示单点部署，后面有时间可以做一个Elasticsearch集群部署文档</p>
 <h1 id="Elasticsearch单点安装与部署"><a href="#Elasticsearch单点安装与部署" class="headerlink" title="Elasticsearch单点安装与部署"></a>Elasticsearch单点安装与部署</h1><p>环境和安装包准备 </p>
 <ul>
@@ -435,11 +435,11 @@
             
               <a href="/tags/elasticsearch/" rel="tag"># elasticsearch</a>
             
+              <a href="/tags/elasticsearch-head/" rel="tag"># elasticsearch-head</a>
+            
               <a href="/tags/logstash/" rel="tag"># logstash</a>
             
               <a href="/tags/kibana/" rel="tag"># kibana</a>
-            
-              <a href="/tags/elasticsearch-head/" rel="tag"># elasticsearch-head</a>
             
           </div>
         
@@ -583,9 +583,6 @@
   </span>
   <span class="author" itemprop="copyrightHolder">surging_yang</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
 
         
 <div class="busuanzi-count">
